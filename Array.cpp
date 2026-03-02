@@ -4,6 +4,7 @@
 
 // Constructor: allocate array with given capacity
 Array::Array(int capacity) : capacity_(capacity), size_(0) {
+    if (capacity_ <= 0) capacity_ = 1;  // ensure minimum capacity
     data_ = new int[capacity_];
 }
 
@@ -14,7 +15,7 @@ Array::~Array() {
 
 // Add value at the end if there's space
 bool Array::Add(int value) {
-    if (size_ == capacity_) {
+    if (size_ >= capacity_) {
         return false;  // no space
     }
     data_[size_] = value;
@@ -24,17 +25,36 @@ bool Array::Add(int value) {
 
 // Insert value at specified index, shifting elements to the right
 bool Array::InsertAt(int index, int value) {
-    return false;
+    if (index < 0 || index > size_ || size_ >= capacity_) {
+        return false;
+    }
+    for (int i = size_; i > index; --i) {
+        data_[i] = data_[i - 1];
+    }
+    data_[index] = value;
+    size_++;
+    return true;
 }
 
 // Delete element at index, shifting elements left
 bool Array::DeleteAt(int index) {
-    return false;
+    if (index < 0 || index >= size_) {
+        return false;
+    }
+    for (int i = index; i < size_ - 1; ++i) {
+        data_[i] = data_[i + 1];
+    }
+    size_--;
+    return true;
 }
 
 // Update element at index
 bool Array::UpdateAt(int index, int new_value) {
-    return false;
+    if (index < 0 || index >= size_) {
+        return false;
+    }
+    data_[index] = new_value;
+    return true;
 }
 
 // Print all elements
